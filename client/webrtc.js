@@ -22,7 +22,7 @@ var peerConnectionConfig = {
 	 credential: 'muazkh',
 	 username: 'webrtc@live.com'
 },
-    { 'urls': 'stun:stun.l.google.com:19302' },
+   // { 'urls': 'stun:stun.l.google.com:19302' },
   ]
 };
 function createPage()
