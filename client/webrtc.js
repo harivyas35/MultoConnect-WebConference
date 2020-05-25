@@ -214,7 +214,7 @@ function start(creatorId1,fromWhere) {
       // set up websocket and message all existing clients
       .then(() => {
         console.log("This the window.location.hostname ",window.location.hostname);
-        serverConnection = new WebSocket('wss://' + window.location.hostname + ':' + WS_PORT+'/'+creatorId1);
+        serverConnection = new WebSocket('ws://' + window.location.hostname + ':' + WS_PORT+'/'+creatorId1);
         //serverConnection = new WebSocket('wss://' + '192.168.0.3'+ ':' + WS_PORT);
 
         serverConnection.onmessage = gotMessageFromServer;
