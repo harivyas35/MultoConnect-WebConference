@@ -1,0 +1,9 @@
+{
+    "name": "WebRTC-Example",
+    "description": "An 'as simple as it gets' WebRTC example.",
+    "repository":"https://github.com/harivyas35/InventoConnect",
+    "keywords": [
+        "webrtc"
+      ]
+
+}

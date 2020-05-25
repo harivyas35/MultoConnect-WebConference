@@ -1,0 +1,27 @@
+{
+  "name": "WebRTC-Example",
+  "version": "1.0.0",
+  "description": "An 'as simple as it gets' WebRTC example.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node":"12.16.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/harivyas35/InventoConnect"
+  },
+  "keywords": [
+    "webrtc"
+  ],
+
+  "author": "Hari Vyas",
+  "license": "MIT",
+ 
+  "dependencies": {
+    "ws": "^3.3.2"
+  }
+}

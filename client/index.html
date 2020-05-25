@@ -1,0 +1,201 @@
+<!--<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="icon" href="data:,">
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="adapter-latest.js"></script>
+
+  <script src="webrtc.js"></script>
+</head>
+<body>
+  
+ <div id = "loginPage" class = "container text-center"> 	  
+          <h2>Create Meeting/Join Meeting Page </h2> 
+          <button id = "loginBtn" class = "btn btn-lg btn-primary btnblock">
+             Create Meeting</button>
+             
+             <button id = "demo" class = "btn btn-lg btn-primary btnblock">
+              This is the id </button>
+          <button id = "JoinButton" class = "btn btn-lg btn-primary btnblock">
+              Join Meeting</button>
+          <label for = "usernameInput" class = "sr-only">Joining Id</label> 
+          <input type = "number" id = "usernameInput" c
+               lass = "form-control formgroup" placeholder = "Joining Id" 
+               required = "" autofocus = ""> 
+           <button id = "startmeeting" class = "btn btn-lg btn-primary btnblock">
+                StartMeeting </button>
+
+ </div> 
+
+<div id="videos" class="videos">
+
+    <div id="localVideoContainer" class="videoContainer">
+      <video id="localVideo" autoplay muted></video>
+    </div>
+
+    
+</div>
+
+<script type="text/javascript">
+    //start();
+    createPage();
+</script> -->
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- prevent extraneous favicon requests -->
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+ <!-- <style>
+.button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+#usernameInput
+{
+  border-color: #ADD8E6;
+  border-style: solid;
+
+}
+.txtOutput
+{
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-color: #ADD8E6;
+  border-style: solid;
+
+}
+.joinPage
+{
+  border: none;
+  color: black;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+
+
+}
+.welcomePage
+{
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button1 {background-color: #4CAF50;} /* Green */
+.button2 {background-color: #008CBA;} /* Blue */
+</style> -->
+  </style>
+  <!--<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>-->
+  <script src="adapter-latest.js"></script>
+  <!--Screen Sharing Reference Below-->
+  <script src="getscreenmedia.bundle.js"></script>
+
+  <script src="webrtc.js"></script>
+</head>
+<body>
+  <div id = "loginPage" class = "button"> 	  
+          <h2 class ="welcomePage">Welcome To InventoConnect </h2> 
+         <button id = "loginBtn" class = "button button1">
+             Create Meeting</button>
+          <button id = "joinMeeting" class = "button button1">
+                Join Meeting </button>
+                
+</div> 
+<div id = "createMeetingPage" class = "button"> 	  
+          <h2 class ="welcomePage" >InventoConnect Create Meeting </h2> 
+          <lable id="demo" class="txtOutput">Share this id </lable>
+
+          <lable id="demo1" class="txtOutput">This is Joining Id</lable>
+         
+         <button id = "startmeeting1" class = "button button1">
+                StartMeeting </button>
+                 
+</div> 
+<div id = "joinPage" class = "joinPage"> 	  
+          <h2 class ="welcomePage">InventoConnect Join Meeting</h2> 
+
+<input type = "number" id = "usernameInput" class = "joinPage" placeholder = "Enter Joining Id" required = "" autofocus = ""> 
+           <button id = "JoinButton" class = "joinPage button1">
+              Join Meeting</button>
+    
+
+</div> 
+<div id="videos" class="videos">
+
+    <div id="localVideoContainer" class="videoContainer">
+      <div>><video id="localVideo" autoplay muted></video></div>
+    </div>
+    
+    <!-- Remote videos get appended here -->
+</div>
+<!--<br>
+<button id = "hangUpBtn" class = "btn-danger btn" type="button">Hang Up</button>
+<button id="muteMyself" class="btn-danger btn input-styled" href="javascript:void(0)">Mute Myself</button>
+<button id="pauseMyVideo" class="btn-danger btn input-styled" href="javascript:void(0)">Pause Video</button>
+<button id="shareMyScreen" class=" btn-danger btn input-styled" href="javascript:void(0)">Share Screen</button>-->
+
+<a href="#" class="float" id="menu-share">
+  <i class="fa fa-share my-float">Menu</i>
+  </a>
+  <ul>
+  <li><a href="#">
+  <i id = "hangUpBtn" class="fa fa-facebook my-float">Hang Up</i>
+  </a></li>
+  <li><a href="#">
+  <i id="muteMyself" class="fa fa-google-plus my-float">Mute Myself</i>
+  </a></li>
+  <li><a href="#">
+  <i id="pauseMyVideo"  class="fa fa-twitter my-float">Pause Video</i>
+  </a></li>
+  <li><a href="#">
+    <i id="joiningId"  class="fa fa-twitter my-float">Meeting
+      Id</i>
+    </a></li>
+  </ul>
+
+
+
+<script type="text/javascript">
+    //start();
+    createPage();
+</script>
+
+</body>
+
+</html>
+
+</body>
+
+</html>
