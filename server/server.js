@@ -36,11 +36,12 @@ const handleRequest = function (request, response) {
 };
 
 const httpsServer = https.createServer(serverConfig, handleRequest);
-httpsServer.listen(HTTPS_PORT,'127.0.0.1',function(){
+httpsServer.listen(HTTPS_PORT);
+/*httpsServer.listen(HTTPS_PORT,'127.0.0.1',function(){
   httpsServer.close(function(){
     httpsServer.listen(HTTPS_PORT,'192.168.43.135')
   })
- });
+ });*/
 
 
 //console.log("This is the httpserver from server",httpsServer);
