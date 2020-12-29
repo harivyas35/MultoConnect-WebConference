@@ -8,21 +8,28 @@ var peerConnections = {}; // key is uuid, values are peer connection object and 
 var connectedUsers=[];
 var creatorId;
 var reoteVideoCount=1;
+var screenCapture;
+var screenShareUUID;
+var dataChannel={};
+//Variables for data channel
+var dataChannelOptions = {
+	ordered: false, //no guaranteed delivery, unreliable but faster 
+	maxRetransmitTime: 1000, //milliseconds
+};
 
-//Variables
 
 
 
 //variables
 var peerConnectionConfig = {
   'iceServers': [
-   // { 'urls': 'stun:stun.stunprotocol.org:3478' },
+   { 'urls': 'stun:stun.stunprotocol.org:3478' },
    {
     url: 'turn:numb.viagenie.ca',
 	 credential: 'muazkh',
 	 username: 'webrtc@live.com'
 },
-   // { 'urls': 'stun:stun.l.google.com:19302' },
+    { 'urls': 'stun:stun.l.google.com:19302' },
   ]
 };
 function createPage()
@@ -40,7 +47,8 @@ function createPage()
   var muteMyself=document.querySelector('#muteMyself');
   var pauseMyVideo = document.querySelector("#pauseMyVideo");
   var joiningId=document.querySelector("#joiningId");
-
+  var shareMyScreen=document.querySelector("#shareMyScreen");
+  //code for data channel
 
   var adminArray=[];
   var i;
@@ -90,7 +98,12 @@ function createPage()
   })
   
   });
-  
+  //Data Channel Buttonn Code//
+
+
+
+
+  //Data Channel Buttopn Code
   //video pausing 
     pauseMyVideo.addEventListener('click', function(){
       console.log("muting/unmuting myself");
@@ -116,7 +129,43 @@ function createPage()
     
     });
     
-    //Code For Screen Share
+    
+    //code for screen share
+    shareMyScreen.addEventListener('click', function(){
+
+      getScreenStream(function(screenStream) {
+        screenCapture=screenStream;
+        console.log("The screen stream",screenStream);
+        console.log("The type of scrceenstream kis ",typeof screenStream)
+        document.getElementById('localVideo').srcObject=screenStream;
+        
+    });
+    function getScreenStream(callback) {
+      if (navigator.getDisplayMedia) {
+          navigator.getDisplayMedia({
+              video: true
+          }).then(screenStream => {
+              callback(screenStream);
+          });
+      } else if (navigator.mediaDevices.getDisplayMedia) {
+          navigator.mediaDevices.getDisplayMedia({
+              video: true
+          }).then(screenStream => {
+              callback(screenStream);
+          });
+      } else {
+          getScreenId(function(error, sourceId, screen_constraints) {
+              navigator.mediaDevices.getUserMedia(screen_constraints).then(function(screenStream) {
+                  callback(screenStream);
+              });
+          });
+      }
+    }
+    
+    });
+    
+    
+    //Code for Screen sharing 
 //hang up 
 hangUpBtn.addEventListener("click", function () { 
   console.log("Hitted HangupButton");
@@ -178,7 +227,28 @@ hangUpBtn.addEventListener("click", function () {
 
 }
 function start(creatorId1,fromWhere) {
-  //Code Variable For Muting 
+  var sendMsgBtn1 = document.querySelector('#sendMsgBtn1'); 
+  var chatArea = document.querySelector('#chatarea'); 
+  var msgInput = document.querySelector('#msgInput'); 
+  //Code For Data Channel
+  /*
+  var msgInput = document.querySelector('#msgInput'); 
+  var sendMsgBtn = document.querySelector('#sendMsgBtn'); 
+  var chatArea = document.querySelector('#chatarea'); */
+  sendMsgBtn1.addEventListener("click", function (event) { 
+    var val = msgInput.value; 
+    //chatArea.innerHTML += 'User' + ": " + val + "<br />"; 
+   
+    //sending a message to a connected peer 
+    //serverConnection.send(JSON.stringify(val));
+    serverConnection.send(JSON.stringify({ 'displayName': localDisplayName,'joinid':creatorId1,"admin":'no',"chatMessage":val}));
+    
+    msgInput.value = "";
+ });
+
+
+  //code for data channel
+
   document.getElementById("joiningId").innerHTML = "Meeting id"+"\n"+
   creatorId1;
 
@@ -214,10 +284,9 @@ function start(creatorId1,fromWhere) {
       // set up websocket and message all existing clients
       .then(() => {
         console.log("This the window.location.hostname ",window.location.hostname);
-        //serverConnection = new WebSocket('ws://' + window.location.hostname + ':' + WS_PORT+'/'+creatorId1);
-        serverConnection = new WebSocket('wss://' + window.location.hostname+'/'+creatorId1);
+        serverConnection = new WebSocket('wss://' + window.location.hostname + ':' + WS_PORT+'/'+creatorId1);
+       // serverConnection = new WebSocket('wss://' + window.location.hostname+'/'+creatorId1);
 
-        //serverConnection = new WebSocket('wss://' + '192.168.0.3'+ ':' + WS_PORT);
 
         serverConnection.onmessage = gotMessageFromServer;
         if(fromWhere=='StartMeeting'){
@@ -244,6 +313,17 @@ function gotMessageFromServer(message) {
   var signal = JSON.parse(message.data);
   console.log("Message from server is ",signal);
   var peerUuid = signal.uuid;
+  var chatMessage=signal.chatMessage;
+  var chatArea = document.querySelector('#chatarea'); 
+
+ if(chatMessage != null){
+    chatArea.innerHTML += signal.displayName + ": " + chatMessage + "<br />"; 
+
+  }
+
+  //Checking For Chat Message
+  console.log("The chat Message if ",chatMessage);
+  screenShareUUID=peerUuid;
   var creatorId1=signal.joinid;
   var adminid=signal.adminid;
 
@@ -286,16 +366,74 @@ function gotMessageFromServer(message) {
 }
 
 function setUpPeer(peerUuid, displayName, initCall = false) {
-  peerConnections[peerUuid] = { 'displayName': displayName, 'pc': new RTCPeerConnection(peerConnectionConfig) };
+  peerConnections[peerUuid] = { 'displayName': displayName, 'pc': new RTCPeerConnection(peerConnectionConfig,null) };
+  //Code for data Channel
+  /*
+  dataChannel[peerUuid] ={ 'displayName': displayName,'dc':peerConnections[peerUuid].pc.createDataChannel('textMessages', dataChannelOptions)}
+  console.log("This is Peer Connectio Object ",peerConnections[peerUuid].pc);
+  dataChannel[peerUuid].onopen = dataChannelStateChanged;
 
-  
-  //Code For Muting 
+  peerConnections[peerUuid].pc.ondatachannel =event=> receiveDataChannel(event);
+  */
+  //dataChannel.onmessage =event=>receiveDataChannelMessage(event);
+
+  //code for data channel
+  /*var messageHolder = document.querySelector("#messageHolder");
+var myMessage = document.querySelector("#myMessage");
+var sendMessage = document.querySelector("#sendMessage");
+
+sendMessage.addEventListener('click', function(ev){
+  dataChannel[peerUuid].dc.send(myMessage.value);
+  console.log("This is data channel",dataChannel[peerUuid],'and this is value',myMessage.value)
+
+	appendChatMessage(myMessage.value, 'message-in');
+	myMessage.value = "";
+	ev.preventDefault();
+}, false);
+
+function appendChatMessage(msg, className) {
+	var div = document.createElement('div');
+	div.className = className;
+	div.innerHTML = '<span>' + msg + '</span>';
+	messageHolder.appendChild(div);
+}
+
+function dataChannelStateChanged() {
+	if (dataChannel.readyState === 'open') {
+		console.log("Data Channel open and came in data channel state change ");
+		dataChannel[peerUuid].dc.onmessage =event=>receiveDataChannelMessage(event);
+	}
+}
+
+function receiveDataChannel(event) {
+	console.log("Receiving a data channel came in data channel receive ");
+	dataChannel[peerUuid].dc = event.channel;
+	dataChannel[peerUuid].dc.onmessage =event=>receiveDataChannelMessage(event);
+}
+
+function receiveDataChannelMessage(event) {
+	console.log("From DataChannel: " + event.data);
+	appendChatMessage(event.data, 'message-out');
+}
+*/
+  //Code for data channel
   peerConnections[peerUuid].pc.onicecandidate = event => gotIceCandidate(event, peerUuid);
   peerConnections[peerUuid].pc.onaddstream = event => gotRemoteStream(event, peerUuid);
   peerConnections[peerUuid].pc.ontrack = event => gotRemoteStream1(event, peerUuid);
-
   peerConnections[peerUuid].pc.oniceconnectionstatechange = event => checkPeerDisconnect(event, peerUuid);
   peerConnections[peerUuid].pc.addStream(localStream);
+
+  //Data Channel Creation Code//
+  //dataChannel.onmessage=event => addMessage(event, peerUuid);
+  //Data Channel Creation Code//
+
+  //Screen shaing function
+  
+//Code For Screen Share
+
+
+  //Screen Sharing Function
+  
   if (initCall) {
     peerConnections[peerUuid].pc.createOffer().then(description => createdDescription(description, peerUuid)).catch(errorHandler);
   }
@@ -323,8 +461,6 @@ function gotRemoteStream(event, peerUuid) {
   vidElement.setAttribute('muted', '');
   //vidElement.srcObject = event.streams[0];
   vidElement.srcObject = event.stream;
-
-
   var vidContainer = document.createElement('div');
   vidContainer.setAttribute('id', 'remoteVideo_' + peerUuid);
   vidContainer.setAttribute('class', 'videoContainer');
@@ -375,8 +511,10 @@ function updateLayout() {
     colWidth = '48vw';
     rowOrCol='row';
     gridtemplate='repeat(auto-fit, minmax(var(--colWidth), 1fr))'
-   // mobRowHeight= '50vh';
-   // mobColWidth='100%'
+    //gridtemplate='auto auto'
+    //mobRowHeight= '50vh';
+    //mobColWidth='100%'
+
     mobRowHeight= '48vh';
     mobColWidth='48vw'
 
@@ -386,8 +524,8 @@ function updateLayout() {
     colWidth = '32vw';
     rowOrCol='row';
     gridtemplate='repeat(auto-fit, minmax(var(--colWidth), 1fr))'
-    mobRowHeight= '50vh';
-    mobColWidth='100%'
+    mobRowHeight= '32vh';
+    mobColWidth='32vw';
   }
 
   document.documentElement.style.setProperty(`--rowHeight`, rowHeight);
@@ -419,3 +557,16 @@ function createUUID() {
 
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
+
+/*function addMessage(event,peerUuid)
+{ 
+
+  console.log("Came into addmessage funtion of datachannel");
+  chatArea.innerHTML += peerUuid + ": " + event.data + "<br />"; 
+}*/
+
+
+//Functions for data chnnel
+/////////////Data Channels Code///////////
+
+

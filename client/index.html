@@ -119,6 +119,8 @@
   </style>
   <!--<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>-->
   <script src="adapter-latest.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
   <!--Screen Sharing Reference Below-->
   <script src="getscreenmedia.bundle.js"></script>
 
@@ -150,21 +152,197 @@
            <button id = "JoinButton" class = "joinPage button1">
               Join Meeting</button>
     
-
 </div> 
 <div id="videos" class="videos">
 
     <div id="localVideoContainer" class="videoContainer">
-      <div>><video id="localVideo" autoplay muted></video></div>
+      <div>><video  id="localVideo" autoplay muted></video></div>
     </div>
     
     <!-- Remote videos get appended here -->
 </div>
+
 <!--<br>
 <button id = "hangUpBtn" class = "btn-danger btn" type="button">Hang Up</button>
 <button id="muteMyself" class="btn-danger btn input-styled" href="javascript:void(0)">Mute Myself</button>
-<button id="pauseMyVideo" class="btn-danger btn input-styled" href="javascript:void(0)">Pause Video</button>
-<button id="shareMyScreen" class=" btn-danger btn input-styled" href="javascript:void(0)">Share Screen</button>-->
+<button id="pauseMyVideo" class="btn-danger btn input-styled" href="javascript:void(0)">Pause Video</button>-->
+<button id="shareMyScreen" class=" btn-danger btn input-styled" href="javascript:void(0)">Share Screen</button>
+<!--
+<form class="send-message form-inline">
+  <div class="form-group">
+<input id="myMessage" class="input-styled" type="text" class="form-control" id="" value="">
+<button id="sendMessage" class="input-styled" type="button">Send Message</button>
+  </div>
+</form>
+        
+<div class="right">
+  
+<div id="messageHolder" class="message-holder">
+	<div id="messageInName" class="message-in"></div>
+		<div id="messageOutName" class="message-out"></div>
+ </div>
+</div>-->
+<!--Messaging Code
+
+<div class = "row"> 
+  <div class = "col-md-4 col-md-offset-4 text-center"> 
+     <div class = "panel panel-primary"> 
+        <div class = "panel-heading">Text chat</div> 
+        <div id = "chatarea" class = "panel-body text-left"></div> 
+     </div> 
+  </div> 
+</div>
+<div class = "row text-center"> 
+  <div class = "col-md-12"> 
+     <input id = "msgInput" type = "text" placeholder = "message" /> 
+     <button id = "sendMsgBtn" class = "btn-success btn">Send</button> 
+  </div> 
+</div>
+-->
+<!--New Message window-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+  body {font-family: Arial, Helvetica, sans-serif;}
+  * {box-sizing: border-box;}
+  video {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+  /* Button used to open the chat form - fixed at the bottom of the page */
+  .open-button {
+    background-color: #555;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+    position: fixed;
+    bottom: 23px;
+    left: 28px;
+    width:40 px;
+  }
+  
+  /* The popup chat - hidden by default */
+  .chat-popup {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 15px;
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+    background-color: transparent;
+  }
+  
+  /* Add styles to the form container */
+  .form-container {
+    max-width: 300px;
+    padding: 10px;
+    background-color:transparent;
+
+  }
+  #chartArea 
+  { width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    border: none;
+    background: transparent;
+    resize: none;
+    height:400px;
+    overflow: scroll;
+  }
+
+  #msgInput
+  {
+    width: 100%;
+    margin: 5px 0 22px 0;
+
+    
+  }
+  .form-container .panel-body
+  {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    border: none;
+    background: transparent;
+    resize: none;
+    height: 60vh;
+    overflow: auto;
+
+  }
+  /* Full-width textarea */
+  .form-container textarea {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    border: none;
+    background: transparent;
+    resize: none;
+    height: 60vh;
+  }
+  
+  /* When the textarea gets focus, do something */
+  .form-container textarea:focus {
+   /* background-color: #ddd;*/
+   background-color: transparent;
+    outline: none;
+  }
+  
+  /* Set a style for the submit/send button */
+  .form-container .btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom:10px;
+    opacity: 0.8;
+  }
+  
+  /* Add a red background color to the cancel button */
+  .form-container .cancel {
+    background-color: red;
+  }
+  
+  /* Add some hover effects to buttons */
+  .form-container .btn:hover, .open-button:hover {
+    opacity: 1;
+  }
+  </style>
+  </head>
+  <body>
+  
+  <button class="open-button" onclick="openForm()">Chat</button>
+  
+  <div class="chat-popup" id="myForm">
+    <div  class="form-container">
+      <h2>InventoConnnect</h2>
+      <div id = "chatarea" class = "panel-body"></div> 
+      <input id = "msgInput" type = "text" placeholder = "message" /> 
+      <button id="sendMsgBtn1"  class="btn">Send</button>
+      <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+    </div>
+  </div>
+  
+  <script>
+  function openForm() {
+    document.getElementById("myForm").style.display = "block";
+  }
+  
+  function closeForm() {
+    document.getElementById("myForm").style.display = "none";
+  }
+  </script>
+  
+  </body>
+  </html>
+  
+<!--Messagind Code-->
 
 <a href="#" class="float" id="menu-share">
   <i class="fa fa-share my-float">Menu</i>
@@ -185,17 +363,12 @@
     </a></li>
   </ul>
 
-
-
 <script type="text/javascript">
-    //start();
+   //start();
     createPage();
 </script>
-
 </body>
-
 </html>
-
 </body>
 
 </html>

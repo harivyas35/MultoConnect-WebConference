@@ -16,41 +16,55 @@ body{
 .videos { 
 
     display: grid;
-    grid-gap: 5px;
+    grid-gap: 0px;
     grid-auto-flow: row;
-    
     grid-template-columns: repeat(auto-fit, minmax(var(--colWidth), 1fr)) ;
 }
+/*.videlementmob
+{
+  height: 98vh;
+  width: 98vw;
+  position: relative;
+  overflow: hidden;
 
+
+}*/
 .videoContainer {
     position: relative;
     overflow: hidden;
     min-height: var(--rowHeight);
     min-width: var(--colWidth);
+    justify-content: center;
+    align-items: center;
     
 }
-/*newly added */
-.videoContainer1 {
-  position: relative;
-  overflow: hidden;
-  
-  min-height: var(--rowHeight);
-  min-width: var(--colWidth);
-  
-}
-/*newly added */
+
 
 .videoContainer video {
 
-    position: absolute;
+    /*position: absolute;
     left: 0;
     bottom: 0;
  
     height:auto;
     width:100% ;
+    */
     /*min-height: var(--rowHeight);
     min-width: var(--colWidth);*/
-  
+    position: absolute; 
+    right: 0; 
+    bottom: 0;
+    min-width: 100%; 
+    min-height: 100%;
+    width: auto; 
+    height: auto; 
+    z-index: -100;
+    background-size: cover;
+    overflow: hidden;
+    align-self:center;
+    align-items: center;
+
+    
 }
 
 .videoLabel {
@@ -152,32 +166,45 @@ and (orientation : portrait)
         overflow: hidden;
         /*height: 50vh;
         width:100%*/
-       min-height:var(--mobRowHeight);
-       min-width:var(--mobColWidth)
+        min-height:var(--mobRowHeight);
+        min-width:var(--mobColWidth);
+        justify-content: center;
+        align-items: center;
+        align-self:center;
+        align-items: center;
+
 
     }
 
     .videoContainer video {
 
-        position: absolute;
+        /*position: absolute;
         left: 0;
         bottom: 0;
-       /* height:50vh;
-        width:100% ;*/
+       
         min-height: var(--mobRowHeight);
-        min-width: var(--mobColWidth);
-      
-      /* height: var(--mobRowHeight);
-       width: var(--mobRowHeight)*/
-
+        min-width: var(--mobColWidth);*/
+      /* height:50vh;
+        width:100% ;*/
+        position: absolute; 
+        right: 0; 
+        bottom: 0;
+        min-width: 100%; 
+        min-height: 100%;
+        width: auto; 
+        height: auto; 
+        z-index: -100;
+        background-size: cover;
+        overflow: hidden;
+       
 
     }
 
     .videoLabel {
         color: white;
         font: bold 1px Arial, Sans-Serif;
-        line-height: 1px;
-        height: 1px;
+        line-height: 0px;
+        height: 0px;
         
         background: rgba(0, 0, 0, 0.55);
         

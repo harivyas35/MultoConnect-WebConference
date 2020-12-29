@@ -35,15 +35,15 @@ const handleRequest = function (request, response) {
   }
 };
 
-//const httpsServer = https.createServer(serverConfig, handleRequest);
-const httpsServer = http.createServer(handleRequest);
+const httpsServer = https.createServer(serverConfig, handleRequest);
+//const httpsServer = http.createServer(handleRequest);
 
-httpsServer.listen(process.env.PORT ||HTTPS_PORT);
-/*httpsServer.listen(HTTPS_PORT,'127.0.0.1',function(){
+//httpsServer.listen(process.env.PORT ||HTTPS_PORT);
+httpsServer.listen(HTTPS_PORT,'127.0.0.1',function(){
   httpsServer.close(function(){
     httpsServer.listen(HTTPS_PORT,'192.168.43.135')
   })
- });*/
+ });
 
 
 //console.log("This is the httpserver from server",httpsServer);
@@ -102,6 +102,13 @@ wss.on('connection', function (ws,req) {
 
     // Broadcast any received message to all clients
     console.log('received: %s', message);
+    var typeofmsg=typeof message;
+    console.log("Type of message is",typeofmsg);
+   
+    if(typeofmsg=='string')
+    {
+    
+    
     creatorIdFromAdmin=JSON.parse(message);
 
     if(creatorIdFromAdmin.admin=='admin'){
@@ -132,7 +139,9 @@ wss.on('connection', function (ws,req) {
       "dest": creatorIdFromAdmin.dest,
       "joinid": creatorIdFromAdmin.joinid,
       "admin": creatorIdFromAdmin.admin,
-      "adminid":dataFromAdmin
+      "adminid":dataFromAdmin,
+      "chatMessage":creatorIdFromAdmin.chatMessage
+
   });
   console.log("Message Created");
 
@@ -146,10 +155,19 @@ wss.on('connection', function (ws,req) {
       if (webSockets[i+""+joinidref].readyState === WebSocket.OPEN)
             webSockets[i+""+joinidref].send(message);
     }
+
+
+  }
+  else
+  {
+    console.log("MediaStream message received");
+  }
     //wss.broadcast(message);
   });
 
+
   ws.on('error', () => ws.terminate());
+
 });
 
 
